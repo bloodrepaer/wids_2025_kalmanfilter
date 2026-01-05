@@ -1,0 +1,40 @@
+Assignment 2: Kalman Filtered Trend Trader
+
+Project Overview
+
+This assignment tackles the challenge of non-stationary financial markets, where the relationships between price, momentum, and volatility evolve over time. Moving beyond static models, this project designs and backtests a dynamic trading strategy for Microsoft (MSFT) stock. The core innovation lies in combining Kalman Filtering (for state-space modeling) with Machine Learning (for predictive signal generation).
+
+- Key Learnings
+
+1. Modeling Non-Stationarity with Kalman Filters
+
+ State-Space Formulation: Learned to formulate a dynamic linear model where the "hidden state" represents time-varying regression coefficients (e.g., the changing relationship between price and a 50-day moving average).
+ Recursive Estimation: Implemented the Kalman Filter to update these latent parameters at each time step, allowing the model to adapt to new market regimes without retraining.
+ Signal Extraction: Extracted the "Kalman Residual" (spread) and "Kalman Beta" (trend slope) to identify when the price has deviated significantly from its fair value.
+
+2. Hybrid Machine Learning Integration
+
+ Feature Engineering: Constructed a robust feature set including RSI (momentum), ATR (volatility), Bollinger Band %B (relative position), and Kalman-filtered states.
+ Predictive Modeling: Trained a Random Forest Classifier to predict the direction of the next day's return. The model learns non-linear interactions between technical indicators and the dynamic Kalman states.
+ Regime-Aware Signals: By using the Kalman Z-score as a feature, the ML model learned to distinguish between "noise" and "true trend reversals" based on the current volatility regime.
+
+3. Quantitative Backtesting & Evaluation
+
+ Realistic Simulation: Built a backtesting engine that simulates trading at the next day's open (to prevent look-ahead bias) and accounts for transaction costs (10 bps).
+ Performance Metrics: Evaluated strategy success using professional metrics:
+ Sharpe Ratio: To measure risk-adjusted returns.
+ Maximum Drawdown: To assess the risk of capital loss.
+ Cumulative Return: Comparing the active strategy against a passive "Buy & Hold" benchmark.
+
+
+ Risk Management: Implemented logic for Volatility-Targeting (sizing positions based on ATR) and Trend Confirmation (only trading when ML and Kalman signals align) to improve the Sharpe ratio.
+- Technologies & Tools
+
+ State-Space Modeling: `pykalman` (for Kalman Filter implementation).
+ Machine Learning: `Scikit-Learn` (Random Forest Classifier).
+ Financial Analysis: `Pandas-TA` (Technical Indicators), `YFinance` (Market Data).
+ Visualization: `Matplotlib` (Equity Curves and Signal plots).
+
+- Summary
+
+This project demonstrates that financial markets are not static. By combining the adaptive nature of Kalman Filters with the pattern-recognition power of Machine Learning, we created a strategy that doesn't just "fit" historical data but "adapts" to it. The final result is a system that can identify trends earlier and manage risk more effectively than traditional static approaches.
