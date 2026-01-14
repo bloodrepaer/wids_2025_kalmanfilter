@@ -1,0 +1,27 @@
+This week I explored the fundamentals of Reinforcement Learning (RL) by comparing tabular methods with function approximation. The work was divided into three distinct tasks using the Gymnasium library.
+
+Task 1 Environment Setup
+We initialized a Python virtual environment to manage dependencies. We verified the installation by running a minimal script on the FrozenLake-v1 environment. This confirmed that the state space (discrete grid) and action space (discrete moves) were correctly loaded.
+
+Task 2 Tabular Q-Learning (FrozenLake)
+The environment is stochastic; actions do not always result in the intended movement due to slippery ice. We observed that learning was noisy and slow. The agent successfully learned to reach the goal, but the success rate never hit 100% due to the random chance of slipping. This result aligns with the expected behavior described in the assignment parameters.
+
+Task 3 Deep Q-Learning (Mountain Car)
+The car must build momentum to reach the flag in a continuous state space (position and velocity). We implemented a Deep Q-Network (DQN) instead of a Q-table. This required modifying the learning loop to include a neural network, experience replay, and target networks.
+
+KEY LEARNINGS AND ANALYSIS
+
+1 Exploration vs Exploitation
+The Issue: In sparse reward environments like Mountain Car, the agent gets -200 reward (timeout) initially. If epsilon decays too fast, the agent stops exploring before finding the goal.
+Failure Mode: This leads to premature convergence where the agent accepts failure as the optimal policy.
+The Fix: We slowed the decay rate significantly. This ensured exploration persisted long enough for the agent to accidentally stumble upon the solution and propagate the reward.
+
+2 Tabular Methods vs Function Approximation
+Tabular Limitation: In FrozenLake, a table worked for 16 states. In Mountain Car, continuous states would require discretizing (binning), leading to lost precision and high memory usage (curse of dimensionality).
+DQN Advantage: Neural networks use Function Approximation. Instead of memorizing states, the network learns a function Q(s,a) which approximates the true value.
+Generalization: This allows the agent to apply knowledge from one state (e.g., position 0.5) to similar unseen states (e.g., position 0.51).
+
+3 Stability Techniques
+To counter the instability of combining neural networks with RL, we used:
+Experience Replay: Stores past experiences and samples them randomly to break temporal correlations.
+Target Networks: Keeps learning targets stationary for short periods to prevent feedback loops.
